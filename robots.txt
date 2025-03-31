@@ -1,0 +1,3 @@
+User-agent: *
+
+Sitemap: https://wangxupeng.github.io/sitemap.xml
