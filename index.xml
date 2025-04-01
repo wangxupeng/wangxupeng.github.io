@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My New Hugo Site</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on My New Hugo Site</description>
+    <title>Welcome to AK-journey :: AK-journey</title>
+    <link>https://example.org/index.html</link>
+    <description>欢迎来到我的个人博客！在这里，我将分享我的想法、经历和关于各种主题的知识。</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 01 Apr 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI技术文章</title>
+      <link>https://example.org/study/index.html</link>
+      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://example.org/study/index.html</guid>
+      <description>在这里，我将分享关于人工智能、机器学习、深度学习等技术领域的文章和见解。包括但不限于：&#xA;AI基础知识 机器学习算法 深度学习框架 计算机视觉 自然语言处理 AI应用实践 希望通过这些内容，能够帮助大家更好地理解和应用AI技术。&#xA;最新文章 DeepSeek-R1 论文详解 (2024-04-01) 近年来，大语言模型（LLM）的推理能力成为研究热点。本文详细解析了 DeepSeek-R1 模型通过纯强化学习（RL）提升推理能力的创新方法。DeepSeek-R1-Zero 在 AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票达 86.7%，媲美 OpenAI-o1-0912。通过多阶段训练优化，最终版本在 AIME 2024 上达到 79.8% 的 Pass@1，性能与 OpenAI-o1-1217 相当。&#xA;阅读全文…</description>
+    </item>
+    <item>
+      <title>关于我</title>
+      <link>https://example.org/about/index.html</link>
+      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://example.org/about/index.html</guid>
+      <description>欢迎来到我的个人博客！</description>
+    </item>
+    <item>
+      <title>日常内容</title>
+      <link>https://example.org/daily/index.html</link>
+      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://example.org/daily/index.html</guid>
+      <description>记录生活中的点点滴滴。</description>
+    </item>
   </channel>
 </rss>

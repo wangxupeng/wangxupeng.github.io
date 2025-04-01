@@ -1,0 +1,13 @@
+#logo {
+    width: 40px;  /* 控制logo的宽度 */
+    height: auto; /* 保持宽高比 */
+    margin-right: 10px; /* 与标题的间距 */
+    vertical-align: middle; /* 垂直对齐 */
+}
+
+/* 确保logo在移动设备上也显示良好 */
+@media screen and (max-width: 768px) {
+    #logo {
+        width: 30px; /* 在移动设备上稍微缩小 */
+    }
+} 

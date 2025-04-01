@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="print">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.145.0">
+    <meta name="generator" content="Relearn 7.6.0+b932d301d7838f3c1a50e318e216b55ce5cc9148">
+    <meta name="description" content="1. 研究背景与动机 近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。
+2. 核心贡献 2.1 DeepSeek-R1-Zero：纯强化学习的突破 方法：直接在基础模型（DeepSeek-V3-Base）上应用 RL，采用 GRPO 算法（节省计算成本，无需价值模型），仅依赖规则奖励（准确性 &#43; 格式）。 成果： 推理能力显著提升：AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票（cons@64）达 86.7%，媲美 OpenAI-o1-0912。 自我进化行为：模型在 RL 过程中自发涌现反思（rethinking）、长链思维（long CoT）、多语言混合等能力。 局限性：可读性差、语言混合问题突出。 2.2 DeepSeek-R1：多阶段训练优化 改进策略： 冷启动（Cold Start）：通过少量高质量长链思维数据对基础模型进行初步 SFT，提升初始可读性。 推理导向的 RL：在冷启动模型上继续 RL，结合语言一致性奖励（减少混合问题）。 拒绝采样与 SFT：从 RL 检查点生成高质量数据，结合非推理任务数据（写作、事实问答等）重新微调模型。 全场景 RL：最终对齐人类偏好（帮助性、无害性）。 成果： 性能与 OpenAI-o1-1217 相当：AIME 2024 Pass@1 达 79.8%，Codeforces 评分超过 96.3% 人类选手。 综合能力提升：在 MMLU、GPQA Diamond 等知识型任务中显著优于前代模型 DeepSeek-V3。 2.3 蒸馏：赋能小模型 方法：将 DeepSeek-R1 生成的 80 万条数据用于微调小规模模型（如 Qwen、Llama），仅用 SFT 无需 RL。 成果： DeepSeek-R1-Distill-Qwen-32B 在 AIME 2024 上 Pass@1 达 72.6%，超越 QwQ-32B-Preview（50.0%）。 蒸馏模型在多项任务中表现优于直接在小模型上应用 RL（如 RL 训练的 Qwen-32B 仅 47.0% Pass@1）。 3. 关键技术细节 3.1 强化学习框架（GRPO） 算法：基于组相对策略优化（GRPO），通过组内奖励计算优势函数，避免传统 PPO 对价值模型的依赖。 奖励设计： 准确性奖励：基于规则（如数学答案格式验证、代码编译测试）。 格式奖励：强制模型将推理过程封装在 和 标签中。 3.2 冷启动与多阶段训练 冷启动数据：通过少量人工设计的 CoT 示例引导模型生成可读性高的推理过程。 多阶段迭代：RL → 拒绝采样生成数据 → SFT → 二次 RL，逐步优化模型能力。 3.3 失败尝试与启示 过程奖励模型（PRM）：难以定义细粒度步骤，且易导致奖励滥用。 蒙特卡洛树搜索（MCTS）：在语言生成中搜索空间过大，训练复杂度高。 4. 实验结果 DeepSeek-R1 vs. 竞品：">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="DeepSeek-R1 论文详解 :: AK-journey">
+    <meta name="twitter:description" content="1. 研究背景与动机 近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。
+2. 核心贡献 2.1 DeepSeek-R1-Zero：纯强化学习的突破 方法：直接在基础模型（DeepSeek-V3-Base）上应用 RL，采用 GRPO 算法（节省计算成本，无需价值模型），仅依赖规则奖励（准确性 &#43; 格式）。 成果： 推理能力显著提升：AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票（cons@64）达 86.7%，媲美 OpenAI-o1-0912。 自我进化行为：模型在 RL 过程中自发涌现反思（rethinking）、长链思维（long CoT）、多语言混合等能力。 局限性：可读性差、语言混合问题突出。 2.2 DeepSeek-R1：多阶段训练优化 改进策略： 冷启动（Cold Start）：通过少量高质量长链思维数据对基础模型进行初步 SFT，提升初始可读性。 推理导向的 RL：在冷启动模型上继续 RL，结合语言一致性奖励（减少混合问题）。 拒绝采样与 SFT：从 RL 检查点生成高质量数据，结合非推理任务数据（写作、事实问答等）重新微调模型。 全场景 RL：最终对齐人类偏好（帮助性、无害性）。 成果： 性能与 OpenAI-o1-1217 相当：AIME 2024 Pass@1 达 79.8%，Codeforces 评分超过 96.3% 人类选手。 综合能力提升：在 MMLU、GPQA Diamond 等知识型任务中显著优于前代模型 DeepSeek-V3。 2.3 蒸馏：赋能小模型 方法：将 DeepSeek-R1 生成的 80 万条数据用于微调小规模模型（如 Qwen、Llama），仅用 SFT 无需 RL。 成果： DeepSeek-R1-Distill-Qwen-32B 在 AIME 2024 上 Pass@1 达 72.6%，超越 QwQ-32B-Preview（50.0%）。 蒸馏模型在多项任务中表现优于直接在小模型上应用 RL（如 RL 训练的 Qwen-32B 仅 47.0% Pass@1）。 3. 关键技术细节 3.1 强化学习框架（GRPO） 算法：基于组相对策略优化（GRPO），通过组内奖励计算优势函数，避免传统 PPO 对价值模型的依赖。 奖励设计： 准确性奖励：基于规则（如数学答案格式验证、代码编译测试）。 格式奖励：强制模型将推理过程封装在 和 标签中。 3.2 冷启动与多阶段训练 冷启动数据：通过少量人工设计的 CoT 示例引导模型生成可读性高的推理过程。 多阶段迭代：RL → 拒绝采样生成数据 → SFT → 二次 RL，逐步优化模型能力。 3.3 失败尝试与启示 过程奖励模型（PRM）：难以定义细粒度步骤，且易导致奖励滥用。 蒙特卡洛树搜索（MCTS）：在语言生成中搜索空间过大，训练复杂度高。 4. 实验结果 DeepSeek-R1 vs. 竞品：">
+    <meta property="og:url" content="https://example.org/study/math-example/index.html">
+    <meta property="og:site_name" content="AK-journey">
+    <meta property="og:title" content="DeepSeek-R1 论文详解 :: AK-journey">
+    <meta property="og:description" content="1. 研究背景与动机 近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。
+2. 核心贡献 2.1 DeepSeek-R1-Zero：纯强化学习的突破 方法：直接在基础模型（DeepSeek-V3-Base）上应用 RL，采用 GRPO 算法（节省计算成本，无需价值模型），仅依赖规则奖励（准确性 &#43; 格式）。 成果： 推理能力显著提升：AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票（cons@64）达 86.7%，媲美 OpenAI-o1-0912。 自我进化行为：模型在 RL 过程中自发涌现反思（rethinking）、长链思维（long CoT）、多语言混合等能力。 局限性：可读性差、语言混合问题突出。 2.2 DeepSeek-R1：多阶段训练优化 改进策略： 冷启动（Cold Start）：通过少量高质量长链思维数据对基础模型进行初步 SFT，提升初始可读性。 推理导向的 RL：在冷启动模型上继续 RL，结合语言一致性奖励（减少混合问题）。 拒绝采样与 SFT：从 RL 检查点生成高质量数据，结合非推理任务数据（写作、事实问答等）重新微调模型。 全场景 RL：最终对齐人类偏好（帮助性、无害性）。 成果： 性能与 OpenAI-o1-1217 相当：AIME 2024 Pass@1 达 79.8%，Codeforces 评分超过 96.3% 人类选手。 综合能力提升：在 MMLU、GPQA Diamond 等知识型任务中显著优于前代模型 DeepSeek-V3。 2.3 蒸馏：赋能小模型 方法：将 DeepSeek-R1 生成的 80 万条数据用于微调小规模模型（如 Qwen、Llama），仅用 SFT 无需 RL。 成果： DeepSeek-R1-Distill-Qwen-32B 在 AIME 2024 上 Pass@1 达 72.6%，超越 QwQ-32B-Preview（50.0%）。 蒸馏模型在多项任务中表现优于直接在小模型上应用 RL（如 RL 训练的 Qwen-32B 仅 47.0% Pass@1）。 3. 关键技术细节 3.1 强化学习框架（GRPO） 算法：基于组相对策略优化（GRPO），通过组内奖励计算优势函数，避免传统 PPO 对价值模型的依赖。 奖励设计： 准确性奖励：基于规则（如数学答案格式验证、代码编译测试）。 格式奖励：强制模型将推理过程封装在 和 标签中。 3.2 冷启动与多阶段训练 冷启动数据：通过少量人工设计的 CoT 示例引导模型生成可读性高的推理过程。 多阶段迭代：RL → 拒绝采样生成数据 → SFT → 二次 RL，逐步优化模型能力。 3.3 失败尝试与启示 过程奖励模型（PRM）：难以定义细粒度步骤，且易导致奖励滥用。 蒙特卡洛树搜索（MCTS）：在语言生成中搜索空间过大，训练复杂度高。 4. 实验结果 DeepSeek-R1 vs. 竞品：">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="AI技术文章">
+    <meta property="article:published_time" content="2024-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-04-01T00:00:00+00:00">
+    <meta itemprop="name" content="DeepSeek-R1 论文详解 :: AK-journey">
+    <meta itemprop="description" content="1. 研究背景与动机 近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。
+2. 核心贡献 2.1 DeepSeek-R1-Zero：纯强化学习的突破 方法：直接在基础模型（DeepSeek-V3-Base）上应用 RL，采用 GRPO 算法（节省计算成本，无需价值模型），仅依赖规则奖励（准确性 &#43; 格式）。 成果： 推理能力显著提升：AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票（cons@64）达 86.7%，媲美 OpenAI-o1-0912。 自我进化行为：模型在 RL 过程中自发涌现反思（rethinking）、长链思维（long CoT）、多语言混合等能力。 局限性：可读性差、语言混合问题突出。 2.2 DeepSeek-R1：多阶段训练优化 改进策略： 冷启动（Cold Start）：通过少量高质量长链思维数据对基础模型进行初步 SFT，提升初始可读性。 推理导向的 RL：在冷启动模型上继续 RL，结合语言一致性奖励（减少混合问题）。 拒绝采样与 SFT：从 RL 检查点生成高质量数据，结合非推理任务数据（写作、事实问答等）重新微调模型。 全场景 RL：最终对齐人类偏好（帮助性、无害性）。 成果： 性能与 OpenAI-o1-1217 相当：AIME 2024 Pass@1 达 79.8%，Codeforces 评分超过 96.3% 人类选手。 综合能力提升：在 MMLU、GPQA Diamond 等知识型任务中显著优于前代模型 DeepSeek-V3。 2.3 蒸馏：赋能小模型 方法：将 DeepSeek-R1 生成的 80 万条数据用于微调小规模模型（如 Qwen、Llama），仅用 SFT 无需 RL。 成果： DeepSeek-R1-Distill-Qwen-32B 在 AIME 2024 上 Pass@1 达 72.6%，超越 QwQ-32B-Preview（50.0%）。 蒸馏模型在多项任务中表现优于直接在小模型上应用 RL（如 RL 训练的 Qwen-32B 仅 47.0% Pass@1）。 3. 关键技术细节 3.1 强化学习框架（GRPO） 算法：基于组相对策略优化（GRPO），通过组内奖励计算优势函数，避免传统 PPO 对价值模型的依赖。 奖励设计： 准确性奖励：基于规则（如数学答案格式验证、代码编译测试）。 格式奖励：强制模型将推理过程封装在 和 标签中。 3.2 冷启动与多阶段训练 冷启动数据：通过少量人工设计的 CoT 示例引导模型生成可读性高的推理过程。 多阶段迭代：RL → 拒绝采样生成数据 → SFT → 二次 RL，逐步优化模型能力。 3.3 失败尝试与启示 过程奖励模型（PRM）：难以定义细粒度步骤，且易导致奖励滥用。 蒙特卡洛树搜索（MCTS）：在语言生成中搜索空间过大，训练复杂度高。 4. 实验结果 DeepSeek-R1 vs. 竞品：">
+    <meta itemprop="datePublished" content="2024-04-01T00:00:00+00:00">
+    <meta itemprop="dateModified" content="2024-04-01T00:00:00+00:00">
+    <meta itemprop="wordCount" content="176">
+    <title>DeepSeek-R1 论文详解 :: AK-journey</title>
+    <link href="https://example.org/study/math-example/index.html" rel="canonical" type="text/html" title="DeepSeek-R1 论文详解 :: AK-journey">
+    <link href="/study/math-example/index.xml" rel="alternate" type="application/rss+xml" title="DeepSeek-R1 论文详解 :: AK-journey">
+    <link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743498531" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743498531" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar/perfect-scrollbar.min.css?1743498531" rel="stylesheet">
+    <link href="/css/theme.min.css?1743498531" rel="stylesheet">
+    <link href="/css/format-print.min.css?1743498531" rel="stylesheet" id="R-format-style">
+    <link href="/css/auto-complete/auto-complete.min.css?1743498531" rel="stylesheet">
+    <script src="/js/auto-complete/auto-complete.min.js?1743498531" defer></script>
+    <script src="/js/lunr/lunr.min.js?1743498531" defer></script>
+    <script src="/js/lunr/lunr.stemmer.support.min.js?1743498531" defer></script>
+    <script src="/js/lunr/lunr.multi.min.js?1743498531" defer></script>
+    <script src="/js/lunr/lunr.en.min.js?1743498531" defer></script>
+    <script src="/js/search.min.js?1743498531" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/study\/math-example\/index.html';
+      window.relearn.relBasePath='..\/..';
+      window.relearn.relBaseUri='..\/..';
+      window.relearn.absBaseUri='https:\/\/example.org';
+      window.relearn.contentLangs=['en'];
+      window.relearn.index_js_url="/searchindex.en.js?1743498531";
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // variant stuff
+      window.relearn.themevariants = [ 'relearn-light' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+    <link href="/css/custom.css?1743498531" rel="stylesheet">
+  </head>
+  <body class="mobile-support print" data-url="/study/math-example/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#1-研究背景与动机">1. 研究背景与动机</a></li>
+    <li><a href="#2-核心贡献">2. 核心贡献</a>
+      <ul>
+        <li><a href="#21-deepseek-r1-zero纯强化学习的突破">2.1 DeepSeek-R1-Zero：纯强化学习的突破</a></li>
+        <li><a href="#22-deepseek-r1多阶段训练优化">2.2 DeepSeek-R1：多阶段训练优化</a></li>
+        <li><a href="#23-蒸馏赋能小模型">2.3 蒸馏：赋能小模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-关键技术细节">3. 关键技术细节</a>
+      <ul>
+        <li><a href="#31-强化学习框架grpo">3.1 强化学习框架（GRPO）</a></li>
+        <li><a href="#32-冷启动与多阶段训练">3.2 冷启动与多阶段训练</a></li>
+        <li><a href="#33-失败尝试与启示">3.3 失败尝试与启示</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-实验结果">4. 实验结果</a></li>
+    <li><a href="#5-局限与未来方向">5. 局限与未来方向</a>
+      <ul>
+        <li><a href="#当前局限">当前局限</a></li>
+        <li><a href="#未来计划">未来计划</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-总结">6. 总结</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/index.html"><span itemprop="name">Welcome to AK-journey</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li>
+            <li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/study/index.html"><span itemprop="name">AI技术文章</span></a><meta itemprop="position" content="2">&nbsp;>&nbsp;</li>
+            <li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">DeepSeek-R1 论文详解</span><meta itemprop="position" content="3"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-print" data-content-empty="disable" data-width-s="area-more" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/study/math-example/index.print.html" title="Print whole chapter (CTRL+ALT+p)"><i class="fa-fw fas fa-print"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/study/index.html" title="AI技术文章 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/about/index.html" title="关于我 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable study" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="deepseek-r1-论文详解">DeepSeek-R1 论文详解</h1>
+
+<h2 id="1-研究背景与动机">1. 研究背景与动机</h2>
+<p>近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。</p>
+<h2 id="2-核心贡献">2. 核心贡献</h2>
+<h3 id="21-deepseek-r1-zero纯强化学习的突破">2.1 DeepSeek-R1-Zero：纯强化学习的突破</h3>
+<ul>
+<li>方法：直接在基础模型（DeepSeek-V3-Base）上应用 RL，采用 GRPO 算法（节省计算成本，无需价值模型），仅依赖规则奖励（准确性 + 格式）。</li>
+<li>成果：
+<ul>
+<li>推理能力显著提升：AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票（cons@64）达 86.7%，媲美 OpenAI-o1-0912。</li>
+<li>自我进化行为：模型在 RL 过程中自发涌现反思（rethinking）、长链思维（long CoT）、多语言混合等能力。</li>
+</ul>
+</li>
+<li>局限性：可读性差、语言混合问题突出。</li>
+</ul>
+<h3 id="22-deepseek-r1多阶段训练优化">2.2 DeepSeek-R1：多阶段训练优化</h3>
+<ul>
+<li>改进策略：
+<ol>
+<li>冷启动（Cold Start）：通过少量高质量长链思维数据对基础模型进行初步 SFT，提升初始可读性。</li>
+<li>推理导向的 RL：在冷启动模型上继续 RL，结合语言一致性奖励（减少混合问题）。</li>
+<li>拒绝采样与 SFT：从 RL 检查点生成高质量数据，结合非推理任务数据（写作、事实问答等）重新微调模型。</li>
+<li>全场景 RL：最终对齐人类偏好（帮助性、无害性）。</li>
+</ol>
+</li>
+<li>成果：
+<ul>
+<li>性能与 OpenAI-o1-1217 相当：AIME 2024 Pass@1 达 79.8%，Codeforces 评分超过 96.3% 人类选手。</li>
+<li>综合能力提升：在 MMLU、GPQA Diamond 等知识型任务中显著优于前代模型 DeepSeek-V3。</li>
+</ul>
+</li>
+</ul>
+<h3 id="23-蒸馏赋能小模型">2.3 蒸馏：赋能小模型</h3>
+<ul>
+<li>方法：将 DeepSeek-R1 生成的 80 万条数据用于微调小规模模型（如 Qwen、Llama），仅用 SFT 无需 RL。</li>
+<li>成果：
+<ul>
+<li>DeepSeek-R1-Distill-Qwen-32B 在 AIME 2024 上 Pass@1 达 72.6%，超越 QwQ-32B-Preview（50.0%）。</li>
+<li>蒸馏模型在多项任务中表现优于直接在小模型上应用 RL（如 RL 训练的 Qwen-32B 仅 47.0% Pass@1）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-关键技术细节">3. 关键技术细节</h2>
+<h3 id="31-强化学习框架grpo">3.1 强化学习框架（GRPO）</h3>
+<ul>
+<li>算法：基于组相对策略优化（GRPO），通过组内奖励计算优势函数，避免传统 PPO 对价值模型的依赖。</li>
+<li>奖励设计：
+<ul>
+<li>准确性奖励：基于规则（如数学答案格式验证、代码编译测试）。</li>
+<li>格式奖励：强制模型将推理过程封装在 <!-- raw HTML omitted --> 和 <!-- raw HTML omitted --> 标签中。</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-冷启动与多阶段训练">3.2 冷启动与多阶段训练</h3>
+<ul>
+<li>冷启动数据：通过少量人工设计的 CoT 示例引导模型生成可读性高的推理过程。</li>
+<li>多阶段迭代：RL → 拒绝采样生成数据 → SFT → 二次 RL，逐步优化模型能力。</li>
+</ul>
+<h3 id="33-失败尝试与启示">3.3 失败尝试与启示</h3>
+<ul>
+<li>过程奖励模型（PRM）：难以定义细粒度步骤，且易导致奖励滥用。</li>
+<li>蒙特卡洛树搜索（MCTS）：在语言生成中搜索空间过大，训练复杂度高。</li>
+</ul>
+<h2 id="4-实验结果">4. 实验结果</h2>
+<ul>
+<li>
+<p>DeepSeek-R1 vs. 竞品：</p>
+<ul>
+<li>数学推理：MATH-500 Pass@1 达 97.3%（OpenAI-o1-1217 为 96.4%）。</li>
+<li>代码竞赛：Codeforces 评分 2029 Elo，超越 96.3% 人类选手。</li>
+<li>通用任务：AlpacaEval 2.0 胜率 87.6%，ArenaHard 胜率 92.3%。</li>
+</ul>
+</li>
+<li>
+<p>蒸馏模型表现：</p>
+<ul>
+<li>DeepSeek-R1-Distill-Llama-70B 在 LiveCodeBench 上 Pass@1 达 57.5%，接近 o1-mini（53.8%）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-局限与未来方向">5. 局限与未来方向</h2>
+<h3 id="当前局限">当前局限</h3>
+<ul>
+<li>语言混合问题（中英文之外的语言支持不足）。</li>
+<li>软件工程任务提升有限（因 RL 数据不足）。</li>
+<li>对提示词敏感，少样本提示可能降低性能。</li>
+</ul>
+<h3 id="未来计划">未来计划</h3>
+<ul>
+<li>扩展长链思维至多轮对话、函数调用等场景。</li>
+<li>优化多语言支持与提示工程。</li>
+<li>结合异步评估提升软件工程任务的 RL 效率。</li>
+</ul>
+<h2 id="6-总结">6. 总结</h2>
+<p>DeepSeek-R1 通过纯强化学习与多阶段训练，在推理任务上达到行业领先水平，并通过蒸馏技术赋能小模型。其核心创新在于验证了 RL 驱动模型自我进化的潜力，同时开源模型与数据为社区提供了重要资源。未来，结合更强大的基础模型与优化策略，或进一步逼近通用人工智能（AGI）的边界。</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Apr 1, 2024
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <script src="/js/clipboard/clipboard.min.js?1743498531" defer></script>
+    <script src="/js/perfect-scrollbar/perfect-scrollbar.min.js?1743498531" defer></script>
+    <script>
+      window.MathJax = Object.assign( window.MathJax || {}, {
+        tex: {
+          inlineMath:  [['\\(', '\\)'], ['$',  '$']],  
+          displayMath: [['\\[', '\\]'], ['$$', '$$']], 
+        },
+        options: {
+          enableMenu: false 
+        }
+      }, JSON.parse("{}") );
+    </script>
+    <script id="MathJax-script" async src="/js/mathjax/tex-mml-chtml.js?1743498531"></script>
+    <script src="/js/theme.min.js?1743498531" defer></script>
+  </body>
+</html>

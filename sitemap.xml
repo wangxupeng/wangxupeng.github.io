@@ -1,11 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/categories/</loc>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://example.org/study/index.html</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://example.org/study/math-example/index.html</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://example.org/index.html</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://example.org/about/index.html</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://example.org/daily/index.html</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://example.org/categories/index.html</loc>
+  </url>
+  <url>
+    <loc>https://example.org/tags/index.html</loc>
   </url>
 </urlset>

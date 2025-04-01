@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts :: AK-journey</title>
+    <link>http://localhost:1313/posts/index.html</link>
+    <description>Welcome to my blog posts! Here you’ll find all my articles and thoughts.</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 Apr 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数学公式示例</title>
+      <link>http://localhost:1313/posts/math-example/index.html</link>
+      <pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/math-example/index.html</guid>
+      <description>二次方程的求根公式 让我们来看一个经典的数学公式 - 二次方程的求根公式。对于一个标准的二次方程：&#xA;$$ ax^2 + bx + c = 0 $$&#xA;其解为：&#xA;$$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$&#xA;这里还有一个行内公式示例：当 $a=1$，$b=5$，$c=6$ 时，我们可以求得 $x_1=-2$ 和 $x_2=-3$。&#xA;一些其他数学公式示例 欧拉公式 这是一个非常优美的公式：&#xA;$$ e^{i\pi} + 1 = 0 $$&#xA;微积分中的导数定义 函数 $f(x)$ 在点 $x_0$ 处的导数定义为：&#xA;$$ f’(x_0) = \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h} $$</description>
+    </item>
+  </channel>
+</rss>
