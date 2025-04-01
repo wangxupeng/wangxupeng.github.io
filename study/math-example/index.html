@@ -12,7 +12,7 @@
     <meta name="twitter:title" content="DeepSeek-R1 论文详解 :: AK-journey">
     <meta name="twitter:description" content="1. 研究背景与动机 近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。
 2. 核心贡献 2.1 DeepSeek-R1-Zero：纯强化学习的突破 方法：直接在基础模型（DeepSeek-V3-Base）上应用 RL，采用 GRPO 算法（节省计算成本，无需价值模型），仅依赖规则奖励（准确性 &#43; 格式）。 成果： 推理能力显著提升：AIME 2024 的 Pass@1 从 15.6% 提升至 71.0%，多数投票（cons@64）达 86.7%，媲美 OpenAI-o1-0912。 自我进化行为：模型在 RL 过程中自发涌现反思（rethinking）、长链思维（long CoT）、多语言混合等能力。 局限性：可读性差、语言混合问题突出。 2.2 DeepSeek-R1：多阶段训练优化 改进策略： 冷启动（Cold Start）：通过少量高质量长链思维数据对基础模型进行初步 SFT，提升初始可读性。 推理导向的 RL：在冷启动模型上继续 RL，结合语言一致性奖励（减少混合问题）。 拒绝采样与 SFT：从 RL 检查点生成高质量数据，结合非推理任务数据（写作、事实问答等）重新微调模型。 全场景 RL：最终对齐人类偏好（帮助性、无害性）。 成果： 性能与 OpenAI-o1-1217 相当：AIME 2024 Pass@1 达 79.8%，Codeforces 评分超过 96.3% 人类选手。 综合能力提升：在 MMLU、GPQA Diamond 等知识型任务中显著优于前代模型 DeepSeek-V3。 2.3 蒸馏：赋能小模型 方法：将 DeepSeek-R1 生成的 80 万条数据用于微调小规模模型（如 Qwen、Llama），仅用 SFT 无需 RL。 成果： DeepSeek-R1-Distill-Qwen-32B 在 AIME 2024 上 Pass@1 达 72.6%，超越 QwQ-32B-Preview（50.0%）。 蒸馏模型在多项任务中表现优于直接在小模型上应用 RL（如 RL 训练的 Qwen-32B 仅 47.0% Pass@1）。 3. 关键技术细节 3.1 强化学习框架（GRPO） 算法：基于组相对策略优化（GRPO），通过组内奖励计算优势函数，避免传统 PPO 对价值模型的依赖。 奖励设计： 准确性奖励：基于规则（如数学答案格式验证、代码编译测试）。 格式奖励：强制模型将推理过程封装在 和 标签中。 3.2 冷启动与多阶段训练 冷启动数据：通过少量人工设计的 CoT 示例引导模型生成可读性高的推理过程。 多阶段迭代：RL → 拒绝采样生成数据 → SFT → 二次 RL，逐步优化模型能力。 3.3 失败尝试与启示 过程奖励模型（PRM）：难以定义细粒度步骤，且易导致奖励滥用。 蒙特卡洛树搜索（MCTS）：在语言生成中搜索空间过大，训练复杂度高。 4. 实验结果 DeepSeek-R1 vs. 竞品：">
-    <meta property="og:url" content="https://example.org/study/math-example/index.html">
+    <meta property="og:url" content="/study/math-example/index.html">
     <meta property="og:site_name" content="AK-journey">
     <meta property="og:title" content="DeepSeek-R1 论文详解 :: AK-journey">
     <meta property="og:description" content="1. 研究背景与动机 近年来，大语言模型（LLM）的推理能力成为研究热点。尽管现有方法（如监督微调、过程奖励模型、搜索算法）在特定任务上取得进展，但在通用推理任务上仍难以匹敌 OpenAI 的 o1 系列模型。本文提出通过纯强化学习（RL）激励模型的自我进化，探索无需监督数据即可提升推理能力的可能性，并最终开发出性能媲美 OpenAI-o1-1217 的模型。
@@ -31,17 +31,17 @@
     <title>DeepSeek-R1 论文详解 :: AK-journey</title>
     <link href="/study/math-example/index.xml" rel="alternate" type="application/rss+xml" title="DeepSeek-R1 论文详解 :: AK-journey">
     <link href="/study/math-example/index.print.html" rel="alternate" type="text/html" title="DeepSeek-R1 论文详解 :: AK-journey">
-    <link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743498531" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743498531" rel="stylesheet"></noscript>
-    <link href="/css/perfect-scrollbar/perfect-scrollbar.min.css?1743498531" rel="stylesheet">
-    <link href="/css/theme.min.css?1743498531" rel="stylesheet">
-    <link href="/css/format-html.min.css?1743498531" rel="stylesheet" id="R-format-style">
-    <link href="/css/auto-complete/auto-complete.min.css?1743498531" rel="stylesheet">
-    <script src="/js/auto-complete/auto-complete.min.js?1743498531" defer></script>
-    <script src="/js/lunr/lunr.min.js?1743498531" defer></script>
-    <script src="/js/lunr/lunr.stemmer.support.min.js?1743498531" defer></script>
-    <script src="/js/lunr/lunr.multi.min.js?1743498531" defer></script>
-    <script src="/js/lunr/lunr.en.min.js?1743498531" defer></script>
-    <script src="/js/search.min.js?1743498531" defer></script>
+    <link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743499164" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743499164" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar/perfect-scrollbar.min.css?1743499164" rel="stylesheet">
+    <link href="/css/theme.min.css?1743499164" rel="stylesheet">
+    <link href="/css/format-html.min.css?1743499164" rel="stylesheet" id="R-format-style">
+    <link href="/css/auto-complete/auto-complete.min.css?1743499164" rel="stylesheet">
+    <script src="/js/auto-complete/auto-complete.min.js?1743499164" defer></script>
+    <script src="/js/lunr/lunr.min.js?1743499164" defer></script>
+    <script src="/js/lunr/lunr.stemmer.support.min.js?1743499164" defer></script>
+    <script src="/js/lunr/lunr.multi.min.js?1743499164" defer></script>
+    <script src="/js/lunr/lunr.en.min.js?1743499164" defer></script>
+    <script src="/js/search.min.js?1743499164" defer></script>
     <script>
       window.relearn = window.relearn || {};
       // configuration
@@ -49,9 +49,9 @@
       window.relearn.path='\/study\/math-example\/index.html';
       window.relearn.relBasePath='..\/..';
       window.relearn.relBaseUri='..\/..';
-      window.relearn.absBaseUri='https:\/\/example.org';
+      window.relearn.absBaseUri='';
       window.relearn.contentLangs=['en'];
-      window.relearn.index_js_url="/searchindex.en.js?1743498531";
+      window.relearn.index_js_url="/searchindex.en.js?1743499164";
       window.relearn.disableAnchorCopy=false;
       window.relearn.disableAnchorScrolling=false;
       window.relearn.disableInlineCopyToClipboard=false;
@@ -97,7 +97,7 @@
       window.T_No_results_found = `No results found for "{0}"`;
       window.T_N_results_found = `{1} results found for "{0}"`;
     </script>
-    <link href="/css/custom.css?1743498531" rel="stylesheet">
+    <link href="/css/custom.css?1743499164" rel="stylesheet">
   </head>
   <body class="mobile-support html" data-url="/study/math-example/index.html">
     <div id="R-body" class="default-animation">
@@ -281,7 +281,7 @@
   <div id="R-header-wrapper" class="default-animation">
     <div id="R-header" class="default-animation">
       <div class="logo-title" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-        <img src="images/head.png" alt="Logo" style="width: 48px; height: 48px; display: inline-block;">
+        <img src="/images/head.png" alt="Logo" style="width: 48px; height: 48px; display: inline-block;">
                   <a id="R-logo" class="R-default" href="/index.html">
             <div class="logo-title">AK-journey</div>
           </a>
@@ -299,7 +299,7 @@
   <div id="R-content-wrapper" class="highlightable">
     <ul class="topics enlarge morespace">
       <li class="dd-item">
-        <a href="https://example.org/" class="padding">
+        <a href="/" class="padding">
           <i class="fas fa-home"></i>
           <span>主页</span>
           <i class="fas fa-check read-icon"></i>
@@ -458,8 +458,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script> 
-    <script src="/js/clipboard/clipboard.min.js?1743498531" defer></script>
-    <script src="/js/perfect-scrollbar/perfect-scrollbar.min.js?1743498531" defer></script>
+    <script src="/js/clipboard/clipboard.min.js?1743499164" defer></script>
+    <script src="/js/perfect-scrollbar/perfect-scrollbar.min.js?1743499164" defer></script>
     <script>
       window.MathJax = Object.assign( window.MathJax || {}, {
         tex: {
@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }, JSON.parse("{}") );
     </script>
-    <script id="MathJax-script" async src="/js/mathjax/tex-mml-chtml.js?1743498531"></script>
-    <script src="/js/theme.min.js?1743498531" defer></script>
+    <script id="MathJax-script" async src="/js/mathjax/tex-mml-chtml.js?1743499164"></script>
+    <script src="/js/theme.min.js?1743499164" defer></script>
   </body>
 </html>
