@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://wangxupeng.github.io/study/index.html</loc>
+    <loc>https://wangxupeng.github.io/ai-projects/exposure-correction/index.html</loc>
+    <lastmod>2024-04-04T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://wangxupeng.github.io/ai-theory/index.html</loc>
     <lastmod>2024-04-01T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://wangxupeng.github.io/study/math-example/index.html</loc>
+    <loc>https://wangxupeng.github.io/ai-projects/index.html</loc>
+    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://wangxupeng.github.io/ai-theory/deepseek-r1/index.html</loc>
     <lastmod>2024-04-01T00:00:00+00:00</lastmod>
   </url>
   <url>

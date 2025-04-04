@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="print">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.145.0">
+    <meta name="generator" content="Relearn 7.6.0+b932d301d7838f3c1a50e318e216b55ce5cc9148">
+    <meta name="description" content="在这里，我将分享AI项目的实践经验和具体案例，包括但不限于：
+计算机视觉项目 自然语言处理应用 AI模型部署实践 开源项目分析 项目架构设计 性能优化技巧 希望这些实践经验能帮助大家在AI项目开发中少走弯路。
+最新项目 监控视频窗口过曝校正方案设计 最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题。本文详细介绍了如何通过区域分割、多重曝光融合和局部优化三个关键步骤来解决这个问题，提供了一个完整的图像处理解决方案。
+阅读全文…">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AI项目分享 :: AK-journey">
+    <meta name="twitter:description" content="在这里，我将分享AI项目的实践经验和具体案例，包括但不限于：
+计算机视觉项目 自然语言处理应用 AI模型部署实践 开源项目分析 项目架构设计 性能优化技巧 希望这些实践经验能帮助大家在AI项目开发中少走弯路。
+最新项目 监控视频窗口过曝校正方案设计 最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题。本文详细介绍了如何通过区域分割、多重曝光融合和局部优化三个关键步骤来解决这个问题，提供了一个完整的图像处理解决方案。
+阅读全文…">
+    <meta property="og:url" content="https://wangxupeng.github.io/ai-projects/index.html">
+    <meta property="og:site_name" content="AK-journey">
+    <meta property="og:title" content="AI项目分享 :: AK-journey">
+    <meta property="og:description" content="在这里，我将分享AI项目的实践经验和具体案例，包括但不限于：
+计算机视觉项目 自然语言处理应用 AI模型部署实践 开源项目分析 项目架构设计 性能优化技巧 希望这些实践经验能帮助大家在AI项目开发中少走弯路。
+最新项目 监控视频窗口过曝校正方案设计 最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题。本文详细介绍了如何通过区域分割、多重曝光融合和局部优化三个关键步骤来解决这个问题，提供了一个完整的图像处理解决方案。
+阅读全文…">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="website">
+    <meta itemprop="name" content="AI项目分享 :: AK-journey">
+    <meta itemprop="description" content="在这里，我将分享AI项目的实践经验和具体案例，包括但不限于：
+计算机视觉项目 自然语言处理应用 AI模型部署实践 开源项目分析 项目架构设计 性能优化技巧 希望这些实践经验能帮助大家在AI项目开发中少走弯路。
+最新项目 监控视频窗口过曝校正方案设计 最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题。本文详细介绍了如何通过区域分割、多重曝光融合和局部优化三个关键步骤来解决这个问题，提供了一个完整的图像处理解决方案。
+阅读全文…">
+    <meta itemprop="datePublished" content="2024-04-01T00:00:00+00:00">
+    <meta itemprop="dateModified" content="2024-04-01T00:00:00+00:00">
+    <meta itemprop="wordCount" content="12">
+    <title>AI项目分享 :: AK-journey</title>
+    <link href="https://wangxupeng.github.io/ai-projects/index.html" rel="canonical" type="text/html" title="AI项目分享 :: AK-journey">
+    <link href="/ai-projects/index.xml" rel="alternate" type="application/rss+xml" title="AI项目分享 :: AK-journey">
+    <link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743746754" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/fonts/fontawesome/css/fontawesome-all.min.css?1743746754" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar/perfect-scrollbar.min.css?1743746754" rel="stylesheet">
+    <link href="/css/theme.min.css?1743746754" rel="stylesheet">
+    <link href="/css/format-print.min.css?1743746754" rel="stylesheet" id="R-format-style">
+    <link href="/css/auto-complete/auto-complete.min.css?1743746754" rel="stylesheet">
+    <script src="/js/auto-complete/auto-complete.min.js?1743746754" defer></script>
+    <script src="/js/lunr/lunr.min.js?1743746754" defer></script>
+    <script src="/js/lunr/lunr.stemmer.support.min.js?1743746754" defer></script>
+    <script src="/js/lunr/lunr.multi.min.js?1743746754" defer></script>
+    <script src="/js/lunr/lunr.en.min.js?1743746754" defer></script>
+    <script src="/js/search.min.js?1743746754" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = `.min`;
+      window.relearn.path='\/ai-projects\/index.html';
+      window.relearn.relBasePath='..';
+      window.relearn.relBaseUri='..';
+      window.relearn.absBaseUri='https:\/\/wangxupeng.github.io';
+      window.relearn.contentLangs=['en'];
+      window.relearn.index_js_url="/searchindex.en.js?1743746754";
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // variant stuff
+      window.relearn.themevariants = [ 'relearn-light' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+    </script>
+    <link href="/css/custom.css?1743746754" rel="stylesheet">
+  </head>
+  <body class="mobile-support print" data-url="/ai-projects/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#最新项目">最新项目</a>
+      <ul>
+        <li><a href="#监控视频窗口过曝校正方案设计"><a href="https://wangxupeng.github.io/ai-projects/exposure-correction/">监控视频窗口过曝校正方案设计</a></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/index.html"><span itemprop="name">Welcome to AK-journey</span></a><meta itemprop="position" content="1">&nbsp;>&nbsp;</li>
+            <li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">AI项目分享</span><meta itemprop="position" content="2"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-print" data-content-empty="disable" data-width-s="area-more" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/ai-projects/index.print.html" title="Print whole chapter (CTRL+ALT+p)"><i class="fa-fw fas fa-print"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/ai-theory/deepseek-r1/index.html" title="DeepSeek-R1 论文详解 (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/ai-projects/exposure-correction/index.html" title="监控视频窗口过曝校正方案设计 (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable ai-projects" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="ai项目分享">AI项目分享</h1>
+
+<p>在这里，我将分享AI项目的实践经验和具体案例，包括但不限于：</p>
+<ul>
+<li>计算机视觉项目</li>
+<li>自然语言处理应用</li>
+<li>AI模型部署实践</li>
+<li>开源项目分析</li>
+<li>项目架构设计</li>
+<li>性能优化技巧</li>
+</ul>
+<p>希望这些实践经验能帮助大家在AI项目开发中少走弯路。</p>
+<h2 id="最新项目">最新项目</h2>
+<h3 id="监控视频窗口过曝校正方案设计"><a href="https://wangxupeng.github.io/ai-projects/exposure-correction/" rel="external" target="_blank">监控视频窗口过曝校正方案设计</a></h3>
+<p>最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题。本文详细介绍了如何通过区域分割、多重曝光融合和局部优化三个关键步骤来解决这个问题，提供了一个完整的图像处理解决方案。</p>
+<p><a href="https://wangxupeng.github.io/ai-projects/exposure-correction/" rel="external" target="_blank">阅读全文&hellip;</a></p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Apr 1, 2024
+  </footer>
+</article>
+          <section>
+            <h1 class="a11y-only">Subsections of AI项目分享</h1>
+<article class="default">
+  <header class="headline">
+  </header>
+
+<h1 id="监控视频窗口过曝校正方案设计">监控视频窗口过曝校正方案设计</h1>
+
+<h2 id="1-项目背景">1. 项目背景</h2>
+<p>最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题——由于窗外光线过强，摄像头拍摄的窗户区域常呈现一片惨白，细节完全丢失。为了解决这个问题，我尝试用传统图像处理方法设计了一套曝光校正方案。本文将详细解读核心思路和实现流程。</p>
+<h2 id="2-设计理念">2. 设计理念</h2>
+<p>该曝光校正方案的核心目标是解决监控摄像头拍摄画面中窗口区域的过曝问题。设计思路主要围绕以下几个关键点展开：</p>
+<h3 id="21-区域分割">2.1 区域分割</h3>
+<p><strong>问题背景</strong>：</p>
+<ul>
+<li>在监控摄像头拍摄的画面中，窗口区域通常位于图像左侧</li>
+<li>由于外部光线强烈，这些区域容易出现过曝现象</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li>假设窗口区域位于图像左侧，通过 <code>window_region_ratio</code> 参数指定窗口区域的比例（默认为0.4）</li>
+<li>具体实现为：<code>window_roi = flow[:, :int(w * window_region_ratio)]</code></li>
+<li>使用掩码（window_mask）标记窗口区域，用于后续定向处理</li>
+</ul>
+<h3 id="22-多重曝光融合">2.2 多重曝光融合</h3>
+<p><strong>问题背景</strong>：</p>
+<ul>
+<li>过曝区域亮度值过高，导致细节丢失</li>
+<li>需要通过降低亮度来恢复细节</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li>使用伽马校正生成不同曝光版本的图像：
+<ul>
+<li>暗版本：通过伽马校正（gamma_bright）降低亮度，用于处理过曝区域</li>
+<li>亮版本：通过伽马校正（gamma_dark）提高亮度（当前代码中未使用）</li>
+</ul>
+</li>
+<li>基于组合掩码（combined_mask）融合不同曝光版本：
+<ul>
+<li>过曝区域使用暗版本</li>
+<li>其他区域保持原图</li>
+</ul>
+</li>
+</ul>
+<h3 id="23-局部优化">2.3 局部优化</h3>
+<p><strong>问题背景</strong>：</p>
+<ul>
+<li>全局对比度增强可能导致局部区域过亮或过暗</li>
+<li>需要进行更细致的局部调整</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li>在亮度通道（L通道）上使用CLAHE（对比度受限自适应直方图均衡）增强局部对比度</li>
+<li>将图像转换到LAB色彩空间，对L通道应用CLAHE，然后合并回RGB图像</li>
+</ul>
+<h2 id="3-处理流程">3. 处理流程</h2>
+<p>整个曝光校正系统的工作流程如下：</p>
+<ol>
+<li>
+<p><strong>输入处理</strong></p>
+<ul>
+<li>支持单张图片、目录或通配符输入</li>
+<li>根据输入类型选择相应的处理路径</li>
+</ul>
+</li>
+<li>
+<p><strong>图像加载与预处理</strong></p>
+<ul>
+<li>使用OpenCV加载图像</li>
+<li>调用ExposureCorrection类的correct方法进行曝光校正</li>
+</ul>
+</li>
+<li>
+<p><strong>窗口区域处理</strong></p>
+<ul>
+<li>基于左侧比例生成窗口区域掩码</li>
+<li>在HSV色彩空间中检测过曝区域（像素亮度&gt;220）</li>
+<li>结合窗口掩码和过曝区域生成融合权重掩码</li>
+</ul>
+</li>
+<li>
+<p><strong>多重曝光融合</strong></p>
+<ul>
+<li>生成明暗两个版本</li>
+<li>基于掩码进行图像融合</li>
+</ul>
+</li>
+<li>
+<p><strong>对比度增强</strong></p>
+<ul>
+<li>在LAB色彩空间中对L通道应用CLAHE</li>
+<li>增强局部细节</li>
+</ul>
+</li>
+<li>
+<p><strong>结果输出</strong></p>
+<ul>
+<li>保存校正后的图像</li>
+<li>生成原图与校正图的对比视图</li>
+</ul>
+</li>
+</ol>
+<h2 id="4-代码实现">4. 代码实现</h2>
+<h3 id="41-核心类设计">4.1 核心类设计</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExposureCorrection</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;用于校正过曝图像的类&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, window_region_ratio<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, clahe_clip<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        初始化曝光校正器
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        参数:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            window_region_ratio: 图像左侧被视为窗口区域的比例
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            clahe_clip: CLAHE对比度限制参数
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>window_region_ratio <span style="color:#f92672">=</span> window_region_ratio <span style="color:#f92672">or</span> config<span style="color:#f92672">.</span>EXPOSURE_WINDOW_REGION_RATIO
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>clahe_clip <span style="color:#f92672">=</span> clahe_clip <span style="color:#f92672">or</span> config<span style="color:#f92672">.</span>EXPOSURE_CORRECTION_CLAHE_CLIP
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>clahe <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>createCLAHE(clipLimit<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>clahe_clip, tileGridSize<span style="color:#f92672">=</span>config<span style="color:#f92672">.</span>CLAHE_GRID_SIZE)</span></span></code></pre></div>
+<p>核心类 <code>ExposureCorrection</code> 实现了整个曝光校正的逻辑。构造函数接收两个关键参数：</p>
+<ul>
+<li><code>window_region_ratio</code>：定义图像左侧多大比例被视为窗口区域</li>
+<li><code>clahe_clip</code>：CLAHE算法的对比度限制参数</li>
+</ul>
+<h3 id="42-曝光校正流程">4.2 曝光校正流程</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">correct</span>(self, image):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    校正过曝图像
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    参数:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        image: 输入的BGR格式图像（OpenCV默认格式）
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    返回:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        校正后的BGR格式图像
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 转换为RGB格式处理</span>
+</span></span><span style="display:flex;"><span>    rgb_image <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>cvtColor(image, cv2<span style="color:#f92672">.</span>COLOR_BGR2RGB)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1. 创建窗口区域掩码</span>
+</span></span><span style="display:flex;"><span>    h, w <span style="color:#f92672">=</span> rgb_image<span style="color:#f92672">.</span>shape[:<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>    window_width <span style="color:#f92672">=</span> int(w <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>window_region_ratio)
+</span></span><span style="display:flex;"><span>    window_mask <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros((h, w), dtype<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>float32)
+</span></span><span style="display:flex;"><span>    window_mask[:, :window_width] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 2. 识别过曝区域</span>
+</span></span><span style="display:flex;"><span>    hsv <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>cvtColor(rgb_image, cv2<span style="color:#f92672">.</span>COLOR_RGB2HSV)
+</span></span><span style="display:flex;"><span>    _, _, v <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>split(hsv)
+</span></span><span style="display:flex;"><span>    overexposed <span style="color:#f92672">=</span> (v <span style="color:#f92672">&gt;</span> config<span style="color:#f92672">.</span>OVEREXPOSED_PIXEL_THRESHOLD)<span style="color:#f92672">.</span>astype(np<span style="color:#f92672">.</span>float32)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 3. 生成融合掩码</span>
+</span></span><span style="display:flex;"><span>    combined_mask <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>clip(window_mask <span style="color:#f92672">+</span> overexposed, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    combined_mask_3ch <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>repeat(np<span style="color:#f92672">.</span>expand_dims(combined_mask, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>), <span style="color:#ae81ff">3</span>, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 4. HDR风格的曝光融合</span>
+</span></span><span style="display:flex;"><span>    img_float <span style="color:#f92672">=</span> rgb_image<span style="color:#f92672">.</span>astype(np<span style="color:#f92672">.</span>float32) <span style="color:#f92672">/</span> <span style="color:#ae81ff">255.0</span>
+</span></span><span style="display:flex;"><span>    img_dark <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>power(img_float, <span style="color:#ae81ff">1.5</span>)  <span style="color:#75715e"># 降低亮度</span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> img_dark <span style="color:#f92672">*</span> combined_mask_3ch <span style="color:#f92672">+</span> img_float <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">-</span> combined_mask_3ch)
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> (result <span style="color:#f92672">*</span> <span style="color:#ae81ff">255</span>)<span style="color:#f92672">.</span>astype(np<span style="color:#f92672">.</span>uint8)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 5. 增强对比度</span>
+</span></span><span style="display:flex;"><span>    lab <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>cvtColor(result, cv2<span style="color:#f92672">.</span>COLOR_RGB2LAB)
+</span></span><span style="display:flex;"><span>    l, a, b <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>split(lab)
+</span></span><span style="display:flex;"><span>    l_clahe <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>clahe<span style="color:#f92672">.</span>apply(l)
+</span></span><span style="display:flex;"><span>    enhanced_lab <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>merge([l_clahe, a, b])
+</span></span><span style="display:flex;"><span>    enhanced_rgb <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>cvtColor(enhanced_lab, cv2<span style="color:#f92672">.</span>COLOR_LAB2RGB)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> cv2<span style="color:#f92672">.</span>cvtColor(enhanced_rgb, cv2<span style="color:#f92672">.</span>COLOR_RGB2BGR)</span></span></code></pre></div>
+<p>代码实现了前面描述的完整处理流程：</p>
+<ol>
+<li>
+<p><strong>图像格式转换</strong>：将输入的BGR格式图像转换为RGB格式进行处理</p>
+</li>
+<li>
+<p><strong>窗口区域掩码生成</strong>：</p>
+<ul>
+<li>根据 <code>window_region_ratio</code> 参数计算窗口宽度</li>
+<li>创建二值掩码，将左侧区域标记为1</li>
+</ul>
+</li>
+<li>
+<p><strong>过曝区域检测</strong>：</p>
+<ul>
+<li>转换到HSV色彩空间</li>
+<li>使用亮度通道（V）检测过曝像素（阈值为220）</li>
+</ul>
+</li>
+<li>
+<p><strong>掩码融合</strong>：</p>
+<ul>
+<li>合并窗口区域掩码和过曝区域掩码</li>
+<li>扩展到3通道以便与RGB图像运算</li>
+</ul>
+</li>
+<li>
+<p><strong>多重曝光融合</strong>：</p>
+<ul>
+<li>生成暗版本图像（gamma=1.5）</li>
+<li>根据掩码在原图和暗版本之间进行加权融合</li>
+</ul>
+</li>
+<li>
+<p><strong>局部对比度增强</strong>：</p>
+<ul>
+<li>转换到LAB色彩空间</li>
+<li>对L通道应用CLAHE算法</li>
+<li>合并通道并转回BGR格式</li>
+</ul>
+</li>
+</ol>
+<h3 id="43-批处理功能">4.3 批处理功能</h3>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">process_images</span>(input_paths, output_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;./processed_images&#34;</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    批量处理图像
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    参数:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        input_paths: 输入路径列表（可以是文件、目录或通配符）
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        output_dir: 输出目录
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>makedirs(output_dir, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    corrector <span style="color:#f92672">=</span> ExposureCorrection()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> input_path <span style="color:#f92672">in</span> input_paths:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isdir(input_path):
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 处理目录中的所有图像</span>
+</span></span><span style="display:flex;"><span>            image_files <span style="color:#f92672">=</span> glob<span style="color:#f92672">.</span>glob(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(input_path, <span style="color:#e6db74">&#34;*.jpg&#34;</span>)) <span style="color:#f92672">+</span> \
+</span></span><span style="display:flex;"><span>                         glob<span style="color:#f92672">.</span>glob(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(input_path, <span style="color:#e6db74">&#34;*.jpeg&#34;</span>)) <span style="color:#f92672">+</span> \
+</span></span><span style="display:flex;"><span>                         glob<span style="color:#f92672">.</span>glob(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(input_path, <span style="color:#e6db74">&#34;*.png&#34;</span>))
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> img_file <span style="color:#f92672">in</span> image_files:
+</span></span><span style="display:flex;"><span>                process_single_image(img_file, output_dir, corrector)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(input_path):
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 处理单个文件</span>
+</span></span><span style="display:flex;"><span>            process_single_image(input_path, output_dir, corrector)</span></span></code></pre></div>
+<p>批处理功能支持：</p>
+<ul>
+<li>处理单个图像文件</li>
+<li>处理整个目录中的所有图像</li>
+<li>支持通配符匹配多个文件</li>
+<li>自动创建输出目录</li>
+<li>生成原图与处理后的对比图</li>
+</ul>
+<h2 id="5-实现效果">5. 实现效果</h2>
+<p><a href="#R-image-e1c89a815d2ee939f47a072c1aafcd86" class="lightbox-link"><img alt="监控视频窗口过曝校正效果对比" class="lazy lightbox figure-image" loading="lazy" src="/ai-projects/exposure-correction/images/exposure-comparison.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-e1c89a815d2ee939f47a072c1aafcd86"><img alt="监控视频窗口过曝校正效果对比" class="lazy lightbox lightbox-image" loading="lazy" src="/ai-projects/exposure-correction/images/exposure-comparison.png"></a></p>
+<p>上图展示了算法的处理效果：</p>
+<ul>
+<li>左图为原始监控画面，可以看到窗户区域严重过曝，细节完全丢失</li>
+<li>右图为经过曝光校正后的效果，窗户区域的细节得到了有效恢复，同时保持了其他区域的正常显示</li>
+</ul>
+<p>主要改进效果：</p>
+<ul>
+<li>窗口区域细节得到有效恢复</li>
+<li>整体画面对比度适中</li>
+<li>局部细节清晰可见</li>
+</ul>
+<h2 id="6-局限与改进方向">6. 局限与改进方向</h2>
+<ol>
+<li>
+<p><strong>窗口区域检测</strong></p>
+<ul>
+<li>当前使用固定比例划分可能不够灵活</li>
+<li>可以考虑引入目标检测算法自动识别窗口区域</li>
+</ul>
+</li>
+<li>
+<p><strong>参数调优</strong></p>
+<ul>
+<li>伽马校正参数需要根据具体场景调整</li>
+<li>可以考虑引入自适应参数调整机制</li>
+</ul>
+</li>
+<li>
+<p><strong>实时性能</strong></p>
+<ul>
+<li>多重曝光融合计算量较大</li>
+<li>可以考虑使用GPU加速或简化算法</li>
+</ul>
+</li>
+</ol>
+<h2 id="7-总结">7. 总结</h2>
+<p>本文提出的曝光校正方案通过区域分割、多重曝光融合和局部优化三个关键步骤，有效解决了监控视频中窗口区域过曝的问题。虽然还存在一些局限性，但整体效果良好，为监控视频图像质量提升提供了一个可行的解决方案。后续将继续优化算法，提升处理效果和性能。</p>
+
+  <footer class="footline">
+              <i class='fa-fw fas fa-calendar'></i> Apr 4, 2024
+  </footer>
+</article>
+          </section>
+        </div>
+      </main>
+    </div>
+    <script src="/js/clipboard/clipboard.min.js?1743746754" defer></script>
+    <script src="/js/perfect-scrollbar/perfect-scrollbar.min.js?1743746754" defer></script>
+    <script src="/js/theme.min.js?1743746754" defer></script>
+  </body>
+</html>

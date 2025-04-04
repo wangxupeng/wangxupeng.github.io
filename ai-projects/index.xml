@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AI项目分享 :: AK-journey</title>
+    <link>https://wangxupeng.github.io/ai-projects/index.html</link>
+    <description>在这里，我将分享AI项目的实践经验和具体案例，包括但不限于：&#xA;计算机视觉项目 自然语言处理应用 AI模型部署实践 开源项目分析 项目架构设计 性能优化技巧 希望这些实践经验能帮助大家在AI项目开发中少走弯路。&#xA;最新项目 监控视频窗口过曝校正方案设计 最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题。本文详细介绍了如何通过区域分割、多重曝光融合和局部优化三个关键步骤来解决这个问题，提供了一个完整的图像处理解决方案。&#xA;阅读全文…</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 04 Apr 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://wangxupeng.github.io/ai-projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>监控视频窗口过曝校正方案设计</title>
+      <link>https://wangxupeng.github.io/ai-projects/exposure-correction/index.html</link>
+      <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://wangxupeng.github.io/ai-projects/exposure-correction/index.html</guid>
+      <description>1. 项目背景 最近在做一个监控视频理解的项目，发现许多监控画面存在严重的窗口区域过曝问题——由于窗外光线过强，摄像头拍摄的窗户区域常呈现一片惨白，细节完全丢失。为了解决这个问题，我尝试用传统图像处理方法设计了一套曝光校正方案。本文将详细解读核心思路和实现流程。&#xA;2. 设计理念 该曝光校正方案的核心目标是解决监控摄像头拍摄画面中窗口区域的过曝问题。设计思路主要围绕以下几个关键点展开：&#xA;2.1 区域分割 问题背景：&#xA;在监控摄像头拍摄的画面中，窗口区域通常位于图像左侧 由于外部光线强烈，这些区域容易出现过曝现象 解决方案：&#xA;假设窗口区域位于图像左侧，通过 window_region_ratio 参数指定窗口区域的比例（默认为0.4） 具体实现为：window_roi = flow[:, :int(w * window_region_ratio)] 使用掩码（window_mask）标记窗口区域，用于后续定向处理 2.2 多重曝光融合 问题背景：&#xA;过曝区域亮度值过高，导致细节丢失 需要通过降低亮度来恢复细节 解决方案：&#xA;使用伽马校正生成不同曝光版本的图像： 暗版本：通过伽马校正（gamma_bright）降低亮度，用于处理过曝区域 亮版本：通过伽马校正（gamma_dark）提高亮度（当前代码中未使用） 基于组合掩码（combined_mask）融合不同曝光版本： 过曝区域使用暗版本 其他区域保持原图 2.3 局部优化 问题背景：&#xA;全局对比度增强可能导致局部区域过亮或过暗 需要进行更细致的局部调整 解决方案：&#xA;在亮度通道（L通道）上使用CLAHE（对比度受限自适应直方图均衡）增强局部对比度 将图像转换到LAB色彩空间，对L通道应用CLAHE，然后合并回RGB图像 3. 处理流程 整个曝光校正系统的工作流程如下：&#xA;输入处理&#xA;支持单张图片、目录或通配符输入 根据输入类型选择相应的处理路径 图像加载与预处理&#xA;使用OpenCV加载图像 调用ExposureCorrection类的correct方法进行曝光校正 窗口区域处理&#xA;基于左侧比例生成窗口区域掩码 在HSV色彩空间中检测过曝区域（像素亮度&gt;220） 结合窗口掩码和过曝区域生成融合权重掩码 多重曝光融合&#xA;生成明暗两个版本 基于掩码进行图像融合 对比度增强&#xA;在LAB色彩空间中对L通道应用CLAHE 增强局部细节 结果输出&#xA;保存校正后的图像 生成原图与校正图的对比视图 4. 代码实现 4.1 核心类设计 class ExposureCorrection: &#34;&#34;&#34;用于校正过曝图像的类&#34;&#34;&#34; def __init__(self, window_region_ratio=None, clahe_clip=None): &#34;&#34;&#34; 初始化曝光校正器 参数: window_region_ratio: 图像左侧被视为窗口区域的比例 clahe_clip: CLAHE对比度限制参数 &#34;&#34;&#34; self.window_region_ratio = window_region_ratio or config.EXPOSURE_WINDOW_REGION_RATIO self.clahe_clip = clahe_clip or config.EXPOSURE_CORRECTION_CLAHE_CLIP self.clahe = cv2.createCLAHE(clipLimit=self.clahe_clip, tileGridSize=config.CLAHE_GRID_SIZE) 核心类 ExposureCorrection 实现了整个曝光校正的逻辑。构造函数接收两个关键参数：</description>
+    </item>
+  </channel>
+</rss>
